@@ -32,7 +32,7 @@ def center_logo(logo, width):
 
 
 def logo():
-    return ('''
+    logo = ('''
    ___           _        _    
   / _ \___   ___| | _____| |_  
  / /_)/ _ \ / __| |/ / _ \ __| 
@@ -52,12 +52,12 @@ def logo():
   \/  \/ \___/|_|  \__,_|___/  
                                
     ''')
-
+    clear()
+    print(center_logo(logo.splitlines(), 80))
 
 def main_menu():
     while True:
-        clear()
-        print(center_logo(logo().splitlines(), 80))
+        logo()
         print("Welcome to Pocket of Words\n".center(80))
         print("To Start, press one of the options bellow + Enter".center(80))
         print("[R] to Register | [L] to Login | [E] to Exit".center(80))
@@ -66,6 +66,7 @@ def main_menu():
             register()
             break
         elif option == "L":
+            login()
             break
         elif option == "E":
             print("Sad to see you going. Please, come back soon.".center(80))
@@ -92,6 +93,24 @@ def register():
             print("User created successfully!")
             return worksheet
 
+
+def login():
+    clear()
+    print("L O G I N\n")
+    while True: 
+        username = input("Username: ")
+        try:
+            worksheet = SHEET.worksheet(username)
+        except gspread.exceptions.WorksheetNotFound as e:
+            print("Username not found. Please try again.\n")
+        else:
+            registered_password = worksheet.acell('B2').value
+            while True:
+                password = getpass("Password: ")
+                if password == registered_password:
+                    return worksheet
+                else:
+                    print("Wrong Password. Please try again.\n")
 
 def print_card(card_content):
     """
