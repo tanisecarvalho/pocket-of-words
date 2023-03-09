@@ -16,13 +16,56 @@ SHEET = GSPREAD_CLIENT.open('pocket_of_words')
 
 default_card_content = ["WORD", "Here a sentence to help you remember the word.", "ANSWER"]
 
+
+def center_logo(logo, width):
+    """Manual centering"""
+    padding =  ' '*(width//2)
+    parts = [ padding[0: (width-len(p))//2+1]+p for p in logo]
+    return '\n'.join(parts)
+
+
+def logo():
+    return ('''
+   ___           _        _    
+  / _ \___   ___| | _____| |_  
+ / /_)/ _ \ / __| |/ / _ \ __| 
+/ ___/ (_) | (__|   <  __/ |_  
+\/    \___/ \___|_|\_\___|\__| 
+                               
+                __             
+          ___  / _|            
+         / _ \| |_             
+        | (_) |  _|            
+         \___/|_|              
+                               
+ __    __              _       
+/ / /\ \ \___  _ __ __| |___   
+\ \/  \/ / _ \| '__/ _` / __|  
+ \  /\  / (_) | | | (_| \__ \  
+  \/  \/ \___/|_|  \__,_|___/  
+                               
+    ''')
+
+
+def main_menu():
+    while True:
+        print("Press [R] to Register | [L] to Login | [E] to Exit".center(80))
+        option = input().upper()
+        if option == "R":
+            break
+        elif option == "L":
+            break
+        elif option == "E":
+            break
+
+
 def create_user_worksheet():
     while True:
         username = input("Username: ")
         try:
             worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=7)
         except gspread.exceptions.APIError as e:
-            print("Username already in use")
+            print("Username already in use. Please try again.\n")
         else:
             password = getpass("Password: ")
             worksheet.append_row(["Username", "Password", "Date"])
@@ -71,5 +114,7 @@ def print_card(card_content):
 
 # print_card(default_card_content)
 
-worksheet = create_user_worksheet()
-worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])
+print(center_logo(logo().splitlines(), 80))
+main_menu()
+# worksheet = create_user_worksheet()
+# worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])

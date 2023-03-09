@@ -64,6 +64,6 @@
 
 ### Code Used
 
-Used [this](https://stackoverflow.com/questions/9202224/getting-a-hidden-password-input) to learn how to get a hidden input for passowrd.
-
+Used [this](https://stackoverflow.com/questions/9202224/getting-a-hidden-password-input) to learn how to get a hidden input for password.
+Used [this](https://stackoverflow.com/questions/49745662/centering-ascii-graphics-python) to learn how to center a ASCII logo on the terminal
 ### Acknowledgements
