@@ -55,6 +55,7 @@ def logo():
     clear()
     print(center_logo(logo.splitlines(), 80))
 
+
 def main_menu():
     while True:
         logo()
@@ -88,11 +89,43 @@ def register():
             worksheet.append_row(["Username", "Password", "Date"])
             worksheet.format('A1:C1', {'textFormat': {'bold': True}})
             worksheet.append_row([username, password, str(datetime.now().date())])
-            worksheet.append_row(["Word", "Sentence", "Translation", "Date Reviewed", "Reviews", "Correct",	"Incorrect"])
+            worksheet.append_row([
+                "Word", 
+                "Sentence", 
+                "Translation", 
+                "Date Reviewed", 
+                "Reviews", 
+                "Correct",	
+                "Incorrect"
+                ])
             worksheet.format('A3:G3', {'textFormat': {'bold': True}})
             print("User created successfully!")
             return worksheet
 
+
+def logged_menu():
+    while True:
+        clear()
+        print("Welcome to Pocket of Words".center(80))
+        print("You're now logged in.\n".center(80))
+        print("Press one of the options bellow + Enter".center(80))
+        print("[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
+              .center(80))
+        option = getpass("").upper()
+        if option == "A":
+            print("Add a word")
+            break
+        elif option == "R":
+            print("Review Words")
+            break
+        elif option == "L":
+            print("See your List")
+            break
+        elif option == "E":
+            print("Sad to see you going. Please, come back soon.".center(80))
+            time.sleep(2)
+            sys.exit(0)
+            
 
 def login():
     clear()
@@ -108,9 +141,12 @@ def login():
             while True:
                 password = getpass("Password: ")
                 if password == registered_password:
-                    return worksheet
+                    logged_menu()
+                    break
                 else:
                     print("Wrong Password. Please try again.\n")
+            break
+
 
 def print_card(card_content):
     """
