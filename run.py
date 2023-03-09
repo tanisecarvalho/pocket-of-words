@@ -1,4 +1,5 @@
 from datetime import datetime
+from getpass import getpass
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -19,11 +20,11 @@ def create_user_worksheet():
     while True:
         username = input("Username: ")
         try:
-            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
+            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=7)
         except gspread.exceptions.APIError as e:
             print("Username already in use")
         else:
-            password = input("Passowrd: ")
+            password = getpass("Password: ")
             worksheet.append_row(["Username", "Password", "Date"])
             worksheet.format('A1:C1', {'textFormat': {'bold': True}})
             worksheet.append_row([username, password, str(datetime.now().date())])
@@ -70,4 +71,5 @@ def print_card(card_content):
 
 # print_card(default_card_content)
 
-create_user_worksheet()
+worksheet = create_user_worksheet()
+worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])
