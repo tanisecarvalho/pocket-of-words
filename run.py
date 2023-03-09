@@ -1,5 +1,8 @@
 from datetime import datetime
 from getpass import getpass
+from os import system, name
+import sys
+import time
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -15,6 +18,10 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('pocket_of_words')
 
 default_card_content = ["WORD", "Here a sentence to help you remember the word.", "ANSWER"]
+
+
+def clear():
+    _ = system("cls" if name == "nt" else "clear")
 
 
 def center_logo(logo, width):
@@ -49,18 +56,27 @@ def logo():
 
 def main_menu():
     while True:
-        print("Press [R] to Register | [L] to Login | [E] to Exit".center(80))
-        option = input().upper()
+        clear()
+        print(center_logo(logo().splitlines(), 80))
+        print("Welcome to Pocket of Words\n".center(80))
+        print("To Start, press one of the options bellow + Enter".center(80))
+        print("[R] to Register | [L] to Login | [E] to Exit".center(80))
+        option = getpass("").upper()
         if option == "R":
+            register()
             break
         elif option == "L":
             break
         elif option == "E":
-            break
+            print("Sad to see you going. Please, come back soon.".center(80))
+            time.sleep(2)
+            sys.exit(0)
 
 
-def create_user_worksheet():
-    while True:
+def register():
+    clear()
+    print("R E G I S T E R\n")
+    while True: 
         username = input("Username: ")
         try:
             worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=7)
@@ -71,7 +87,7 @@ def create_user_worksheet():
             worksheet.append_row(["Username", "Password", "Date"])
             worksheet.format('A1:C1', {'textFormat': {'bold': True}})
             worksheet.append_row([username, password, str(datetime.now().date())])
-            worksheet.append_row(["word", "sentence", "translation", "date reviewed", "reviews", "correct",	"incorrect"])
+            worksheet.append_row(["Word", "Sentence", "Translation", "Date Reviewed", "Reviews", "Correct",	"Incorrect"])
             worksheet.format('A3:G3', {'textFormat': {'bold': True}})
             print("User created successfully!")
             return worksheet
@@ -114,7 +130,6 @@ def print_card(card_content):
 
 # print_card(default_card_content)
 
-print(center_logo(logo().splitlines(), 80))
 main_menu()
 # worksheet = create_user_worksheet()
 # worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])
