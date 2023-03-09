@@ -15,6 +15,24 @@ SHEET = GSPREAD_CLIENT.open('pocket_of_words')
 
 default_card_content = ["WORD", "Here a sentence to help you remember the word.", "ANSWER"]
 
+def create_user_worksheet():
+    while True:
+        username = input("Username: ")
+        try:
+            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
+        except gspread.exceptions.APIError as e:
+            print("Username already in use")
+        else:
+            password = input("Passowrd: ")
+            worksheet.append_row(["Username", "Password", "Date"])
+            worksheet.format('A1:C1', {'textFormat': {'bold': True}})
+            worksheet.append_row([username, password, str(datetime.now().date())])
+            worksheet.append_row(["word", "sentence", "translation", "date reviewed", "reviews", "correct",	"incorrect"])
+            worksheet.format('A3:G3', {'textFormat': {'bold': True}})
+            print("User created successfully!")
+            return worksheet
+
+
 def print_card(card_content):
     """
     Prints the card for review
@@ -50,4 +68,6 @@ def print_card(card_content):
     card_final = ' ' + card + '\n' + card_sides + ' ' + card
     print(card_final.center(80))
 
-print_card(default_card_content)
+# print_card(default_card_content)
+
+create_user_worksheet()
