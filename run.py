@@ -5,6 +5,11 @@ import sys
 import time
 import gspread
 from google.oauth2.service_account import Credentials
+# from prettytable import PrettyTable
+from prettytable.colortable import ColorTable, Themes
+# from colorama import init, Fore
+
+# init(autoreset=True)
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -127,7 +132,7 @@ def logged_menu(worksheet):
             print("Review Words")
             break
         elif option == "L":
-            print("See your List")
+            see_list_of_words(worksheet)
             break
         elif option == "E":
             print("Sad to see you going. Please, come back soon.".center(80))
@@ -163,7 +168,7 @@ def add_word(worksheet):
     sentence = input("A sentence to help me remember: ")
     translation = input("Translation: ")
     try:
-        worksheet.append_row([word, sentence, translation])
+        worksheet.append_row([word, sentence, translation," ", 0, 0, 0])
     except gspread.exceptions.APIError as e:
         print("An error occurred on adding your word. Please try again.\n")
         time.sleep(2)
@@ -178,6 +183,20 @@ def add_word(worksheet):
             print("We are redirecting you back to the menu.")
             time.sleep(2)
             logged_menu(worksheet)
+
+
+def see_list_of_words(worksheet):
+    clear()
+    print("L I S T  O F  W O R D S\n")
+    table_of_words = ColorTable()
+    table_of_words = ColorTable(theme=Themes.OCEAN)
+    table_of_words.field_names = worksheet.row_values(3)
+    table_of_words.add_rows(worksheet.get_all_values()[3:])
+    print(table_of_words)
+    input("\nPress Enter to go back to the menu\n")
+    print("We are redirecting you back to the menu.")
+    time.sleep(2)
+    logged_menu(worksheet)
 
 
 def print_card(card_content):
@@ -220,3 +239,8 @@ def print_card(card_content):
 main_menu()
 # worksheet = create_user_worksheet()
 # worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])
+
+
+
+# print(Fore.CYAN + 'some red text')
+# print('automatically back to default color again')
