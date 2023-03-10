@@ -8,6 +8,7 @@ from google.oauth2.service_account import Credentials
 # from prettytable import PrettyTable
 from prettytable.colortable import ColorTable, Themes
 # from colorama import init, Fore
+import random
 
 # init(autoreset=True)
 
@@ -104,11 +105,11 @@ def register():
                 "Translation", 
                 "Date Reviewed", 
                 "Reviews", 
+                "Used Hints",
                 "Correct",	
-                "Incorrect",
-                "Used Hints"
+                "Incorrect"
                 ])
-            worksheet.format('A3:G3', {'textFormat': {'bold': True}})
+            worksheet.format('A3:H3', {'textFormat': {'bold': True}})
             print("\nUser created successfully!")
             time.sleep(2)
             return worksheet
@@ -168,7 +169,7 @@ def add_word(worksheet):
     sentence = input("A sentence to help me remember: ")
     translation = input("Translation: ")
     try:
-        worksheet.append_row([word, sentence, translation," ", 0, 0, 0])
+        worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
     except gspread.exceptions.APIError as e:
         print("An error occurred on adding your word. Please try again.\n")
         time.sleep(2)
@@ -200,22 +201,54 @@ def see_list_of_words(worksheet):
 
 
 def review_words(worksheet):
-    total_words = len(worksheet.get_all_values()) - 3
+    list_of_words = worksheet.get_all_values()[3:]
+    print(list_of_words)
+    total_words = len(list_of_words)
     while True:
         clear()
         print("R E V I E W  W O R D S\n")
-        how_many_words = input(f"You have {total_words} words. How many would you like to review? ")
-        if how_many_words.isnumeric() and int(how_many_words) > 0 and int(how_many_words) <= total_words:
-            print(how_many_words)
-            input("words")
+        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
+        if how_many_words > 0 and how_many_words <= total_words:
+            select_words(list_of_words, how_many_words)
             break
         else:
             print(f"Please inform a number between 1 - {total_words}")
-            time.sleep(2)
+            
+
+def select_words(list_of_words, total_words):
+    chosen_words = random.choices(list_of_words, k=total_words)
+    current_index = 0
+    state = "initial"
     
+    while current_index < total_words:
+        clear()
+        if state == "initial":
+            current_word = chosen_words[current_index]
+            current_word[3] = str(datetime.now().date())
+            current_word[4] = int(current_word[4]) + 1
+
+        current_word = print_card(current_word, state)
+        answer = input("\nPress [H] for a Hint or enter your answer: ").upper()
+        if answer == "H":
+            state = "hint"
+        else:
+            clear()
+            current_word = print_card(current_word, "answer")
+            if answer == current_word[2].upper():
+                current_word[6] = int(current_word[6]) + 1
+                print("\nCongratulations! You got it!")
+            else:
+                current_word[7] = int(current_word[7]) + 1
+                print("\nOh no! Better luck next time!")
+            input("\nPress [Enter] to go for the next card")
+            state = "initial"
+            current_index += 1
+            
+
+    print("\nCongratulations You reviewed all the cards", current_index)
 
 
-def print_card(card_content):
+def print_card(current_word, state="initial"):
     """
     Prints the card for review
     """
@@ -224,6 +257,14 @@ def print_card(card_content):
 
     card = ''
     card_sides = ''
+
+    card_content = [current_word[0], "Here a sentence to help you remember the word.", "ANSWER"]
+
+    if state == "hint" :
+        current_word[5] = int(current_word[5]) + 1
+        card_content = [current_word[0], current_word[1], "ANSWER"]
+    elif state == "answer":
+        card_content = [current_word[0], current_word[1], current_word[2]]
 
     for i in range(CARD_SIZE):
         card += '-'
@@ -235,7 +276,6 @@ def print_card(card_content):
             word = card_content[word_index]
             word_index += 1
             count_spaces = CARD_SIZE - len(word)
-            print(word, count_spaces)
             for i in range(count_spaces):
                 if i == int(count_spaces / 2):
                     card_sides += word
@@ -249,6 +289,8 @@ def print_card(card_content):
 
     card_final = ' ' + card + '\n' + card_sides + ' ' + card
     print(card_final.center(80))
+
+    return current_word
 
 # print_card(default_card_content)
 
