@@ -64,10 +64,14 @@ def main_menu():
         print("[R] to Register | [L] to Login | [E] to Exit".center(80))
         option = getpass("").upper()
         if option == "R":
-            register()
+            worksheet = register()
+            if worksheet is not None:
+                logged_menu(worksheet)
             break
         elif option == "L":
-            login()
+            worksheet = login()
+            if worksheet is not None:
+                logged_menu(worksheet)
             break
         elif option == "E":
             print("Sad to see you going. Please, come back soon.".center(80))
@@ -78,10 +82,10 @@ def main_menu():
 def register():
     clear()
     print("R E G I S T E R\n")
-    while True: 
+    while True:
         username = input("Username: ")
         try:
-            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=7)
+            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
         except gspread.exceptions.APIError as e:
             print("Username already in use. Please try again.\n")
         else:
@@ -96,14 +100,18 @@ def register():
                 "Date Reviewed", 
                 "Reviews", 
                 "Correct",	
-                "Incorrect"
+                "Incorrect",
+                "Used Hints"
                 ])
             worksheet.format('A3:G3', {'textFormat': {'bold': True}})
-            print("User created successfully!")
+            print("\nUser created successfully!")
+            time.sleep(2)
             return worksheet
 
+    return None
 
-def logged_menu():
+
+def logged_menu(worksheet):
     while True:
         clear()
         print("Welcome to Pocket of Words".center(80))
@@ -113,7 +121,7 @@ def logged_menu():
               .center(80))
         option = getpass("").upper()
         if option == "A":
-            print("Add a word")
+            add_word(worksheet)
             break
         elif option == "R":
             print("Review Words")
@@ -125,7 +133,7 @@ def logged_menu():
             print("Sad to see you going. Please, come back soon.".center(80))
             time.sleep(2)
             sys.exit(0)
-            
+
 
 def login():
     clear()
@@ -141,11 +149,35 @@ def login():
             while True:
                 password = getpass("Password: ")
                 if password == registered_password:
-                    logged_menu()
-                    break
+                    return worksheet
                 else:
                     print("Wrong Password. Please try again.\n")
             break
+    return None
+
+
+def add_word(worksheet):
+    clear()
+    print("A D D  A  W O R D\n")
+    word = input("New word: ")
+    sentence = input("A sentence to help me remember: ")
+    translation = input("Translation: ")
+    try:
+        worksheet.append_row([word, sentence, translation])
+    except gspread.exceptions.APIError as e:
+        print("An error occurred on adding your word. Please try again.\n")
+        time.sleep(2)
+        add_word(worksheet)
+    else:
+        print("\nWord added successfully!")
+        print("Would you like to add another word?")
+        option = input("Y/N? ").upper()
+        if option == "Y":
+            add_word(worksheet)
+        else:
+            print("We are redirecting you back to the menu.")
+            time.sleep(2)
+            logged_menu(worksheet)
 
 
 def print_card(card_content):
