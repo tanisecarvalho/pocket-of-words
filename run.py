@@ -129,7 +129,7 @@ def logged_menu(worksheet):
             add_word(worksheet)
             break
         elif option == "R":
-            print("Review Words")
+            review_words(worksheet)
             break
         elif option == "L":
             see_list_of_words(worksheet)
@@ -197,6 +197,22 @@ def see_list_of_words(worksheet):
     print("We are redirecting you back to the menu.")
     time.sleep(2)
     logged_menu(worksheet)
+
+
+def review_words(worksheet):
+    total_words = len(worksheet.get_all_values()) - 3
+    while True:
+        clear()
+        print("R E V I E W  W O R D S\n")
+        how_many_words = input(f"You have {total_words} words. How many would you like to review? ")
+        if how_many_words.isnumeric() and int(how_many_words) > 0 and int(how_many_words) <= total_words:
+            print(how_many_words)
+            input("words")
+            break
+        else:
+            print(f"Please inform a number between 1 - {total_words}")
+            time.sleep(2)
+    
 
 
 def print_card(card_content):
