@@ -202,21 +202,24 @@ def see_list_of_words(worksheet):
 
 def review_words(worksheet):
     list_of_words = worksheet.get_all_values()[3:]
-    print(list_of_words)
+    i = 4
+    for word in list_of_words:
+        word.append(i)
+        i += 1
     total_words = len(list_of_words)
     while True:
         clear()
         print("R E V I E W  W O R D S\n")
         how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
         if how_many_words > 0 and how_many_words <= total_words:
-            select_words(list_of_words, how_many_words)
+            select_words(list_of_words, how_many_words, worksheet)
             break
         else:
             print(f"Please inform a number between 1 - {total_words}")
             
 
-def select_words(list_of_words, total_words):
-    chosen_words = random.choices(list_of_words, k=total_words)
+def select_words(list_of_words, total_words, worksheet):
+    chosen_words = random.sample(list_of_words, total_words)
     current_index = 0
     state = "initial"
     
@@ -240,6 +243,8 @@ def select_words(list_of_words, total_words):
             else:
                 current_word[7] = int(current_word[7]) + 1
                 print("\nOh no! Better luck next time!")
+            id = 'A'+str(current_word[8])+':H'+str(current_word[8])
+            worksheet.update(id, [current_word[:8]])
             input("\nPress [Enter] to go for the next card")
             state = "initial"
             current_index += 1
@@ -289,6 +294,7 @@ def print_card(current_word, state="initial"):
 
     card_final = ' ' + card + '\n' + card_sides + ' ' + card
     print(card_final.center(80))
+    
 
     return current_word
 
