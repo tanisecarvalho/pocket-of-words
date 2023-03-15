@@ -89,7 +89,7 @@ def register():
     clear()
     print("R E G I S T E R\n")
     while True:
-        username = input("Username: ")
+        username = input("Username: \n")
         try:
             worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
         except gspread.exceptions.APIError as e:
@@ -145,7 +145,7 @@ def login():
     clear()
     print("L O G I N\n")
     while True: 
-        username = input("Username: ")
+        username = input("Username: \n")
         try:
             worksheet = SHEET.worksheet(username)
         except gspread.exceptions.WorksheetNotFound as e:
@@ -165,9 +165,9 @@ def login():
 def add_word(worksheet):
     clear()
     print("A D D  A  W O R D\n")
-    word = input("New word: ")
-    sentence = input("A sentence to help me remember: ")
-    translation = input("Translation: ")
+    word = input("New word: \n")
+    sentence = input("A sentence to help me remember: \n")
+    translation = input("Translation: \n")
     try:
         worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
     except gspread.exceptions.APIError as e:
@@ -177,7 +177,7 @@ def add_word(worksheet):
     else:
         print("\nWord added successfully!")
         print("Would you like to add another word?")
-        option = input("Y/N? ").upper()
+        option = input("Y/N? \n").upper()
         if option == "Y":
             add_word(worksheet)
         else:
@@ -210,7 +210,7 @@ def review_words(worksheet):
     while True:
         clear()
         print("R E V I E W  W O R D S\n")
-        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
+        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? \n"))
         if how_many_words > 0 and how_many_words <= total_words:
             select_words(list_of_words, how_many_words, worksheet)
             break
@@ -231,7 +231,7 @@ def select_words(list_of_words, total_words, worksheet):
             current_word[4] = int(current_word[4]) + 1
 
         current_word = print_card(current_word, state)
-        answer = input("\nPress [H] for a Hint or enter your answer: ").upper()
+        answer = input("\nPress [H] for a Hint or enter your answer: \n").upper()
         if answer == "H":
             state = "hint"
         else:
@@ -245,7 +245,7 @@ def select_words(list_of_words, total_words, worksheet):
                 print("\nOh no! Better luck next time!")
             id = 'A'+str(current_word[8])+':H'+str(current_word[8])
             worksheet.update(id, [current_word[:8]])
-            input("\nPress [Enter] to go for the next card")
+            input("\nPress [Enter] to go for the next card\n")
             state = "initial"
             current_index += 1
             
