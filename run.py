@@ -67,7 +67,7 @@ def main_menu():
         logo()
         print("Welcome to Pocket of Words\n".center(80))
         print("To Start, press one of the options bellow + Enter".center(80))
-        print("[R] to Register | [L] to Login | [E] to Exit".center(80))
+        print("[R] to Register | [L] to Login | [G] to Read our Guide | [E] to Exit".center(80))
         option = getpass("").upper()
         if option == "R":
             worksheet = register()
@@ -79,6 +79,9 @@ def main_menu():
             if worksheet is not None:
                 logged_menu(worksheet)
             break
+        elif option == "G":
+            guide()
+            break
         elif option == "E":
             print("Sad to see you going. Please, come back soon.".center(80))
             time.sleep(2)
@@ -89,7 +92,7 @@ def register():
     clear()
     print("R E G I S T E R\n")
     while True:
-        username = input("Username: \n")
+        username = input("Username: ")
         try:
             worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
         except gspread.exceptions.APIError as e:
@@ -145,7 +148,7 @@ def login():
     clear()
     print("L O G I N\n")
     while True: 
-        username = input("Username: \n")
+        username = input("Username: ")
         try:
             worksheet = SHEET.worksheet(username)
         except gspread.exceptions.WorksheetNotFound as e:
@@ -161,13 +164,32 @@ def login():
             break
     return None
 
+def guide():
+    clear()
+    print("\nG U I D E\n")
+    guide = "About Us\n"
+    guide += "\nPocket of Words was created to help people who want to learn a new language.\n"
+    guide += "Here you can insert new words that you learnt and review them.\n"
+    guide += "\nHow to Use\n"
+    guide += "\n1. Register with a username and password.\n"
+    guide += "2. If you're already registered enter your name and password.\n"
+    guide += "3. Enter the new word you learnt.\n"
+    guide += "4. Enter a sentence to help you remember the word.\n"
+    guide += "5. Enter the translation of the word on your mother tongue.\n"
+    guide += "6. Now you can add more words, review, delete, and see a list.\n"
+    print(guide.center(80))
+    input("\nPress Enter to go back to the menu")
+    print("We are redirecting you back to the menu.")
+    time.sleep(2)
+    main_menu()
+
 
 def add_word(worksheet):
     clear()
     print("A D D  A  W O R D\n")
-    word = input("New word: \n")
-    sentence = input("A sentence to help me remember: \n")
-    translation = input("Translation: \n")
+    word = input("New word: ")
+    sentence = input("A sentence to help me remember: ")
+    translation = input("Translation: ")
     try:
         worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
     except gspread.exceptions.APIError as e:
@@ -177,7 +199,7 @@ def add_word(worksheet):
     else:
         print("\nWord added successfully!")
         print("Would you like to add another word?")
-        option = input("Y/N? \n").upper()
+        option = input("Y/N? ").upper()
         if option == "Y":
             add_word(worksheet)
         else:
@@ -194,7 +216,7 @@ def see_list_of_words(worksheet):
     table_of_words.field_names = worksheet.row_values(3)
     table_of_words.add_rows(worksheet.get_all_values()[3:])
     print(table_of_words)
-    input("\nPress Enter to go back to the menu\n")
+    input("\nPress Enter to go back to the menu")
     print("We are redirecting you back to the menu.")
     time.sleep(2)
     logged_menu(worksheet)
@@ -210,7 +232,7 @@ def review_words(worksheet):
     while True:
         clear()
         print("R E V I E W  W O R D S\n")
-        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? \n"))
+        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
         if how_many_words > 0 and how_many_words <= total_words:
             select_words(list_of_words, how_many_words, worksheet)
             break
@@ -231,7 +253,7 @@ def select_words(list_of_words, total_words, worksheet):
             current_word[4] = int(current_word[4]) + 1
 
         current_word = print_card(current_word, state)
-        answer = input("\nPress [H] for a Hint or enter your answer: \n").upper()
+        answer = input("\nPress [H] for a Hint or enter your answer: ").upper()
         if answer == "H":
             state = "hint"
         else:
@@ -245,7 +267,7 @@ def select_words(list_of_words, total_words, worksheet):
                 print("\nOh no! Better luck next time!")
             id = 'A'+str(current_word[8])+':H'+str(current_word[8])
             worksheet.update(id, [current_word[:8]])
-            input("\nPress [Enter] to go for the next card\n")
+            input("\nPress [Enter] to go for the next card")
             state = "initial"
             current_index += 1
             
