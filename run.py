@@ -140,7 +140,7 @@ def logged_menu(worksheet):
         elif option == "E":
             print("Sad to see you going. Please, come back soon.".center(80))
             time.sleep(2)
-            sys.exit(0)
+            main_menu()
 
 
 def login():
