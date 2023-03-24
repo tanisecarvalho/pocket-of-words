@@ -259,9 +259,13 @@ def select_words(list_of_words, total_words, worksheet):
             current_word[4] = int(current_word[4]) + 1
 
         current_word = print_card(current_word, state)
-        answer = input("\nPress [H] for a Hint or enter your answer: ").upper()
+        answer = input("\nPress [H] for a Hint | [Q] to Quit | or enter your answer: ").upper()
         if answer == "H":
             state = "hint"
+        elif answer == "Q":
+            print("We are redirecting you back to the menu.")
+            time.sleep(2)
+            logged_menu(worksheet)
         else:
             clear()
             current_word = print_card(current_word, "answer")
@@ -326,13 +330,4 @@ def print_card(current_word, state="initial"):
 
     return current_word
 
-# print_card(default_card_content)
-
 main_menu()
-# worksheet = create_user_worksheet()
-# worksheet.append_row(["casa", "Eu moro em uma casa.", "house"])
-
-
-
-# print(Fore.CYAN + 'some red text')
-# print('automatically back to default color again')
