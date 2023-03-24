@@ -215,17 +215,31 @@ def see_list_of_words(worksheet):
     table_of_words.set_style(DOUBLE_BORDER)
     list_header = worksheet.row_values(3)
     del list_header[1:4]
-    table_of_words.field_names = list_header
+    table_of_words.field_names = ["ID"] + list_header
     list_values = worksheet.get_all_values()[3:]
+    index = 0
     for row in list_values:
         del row[1:4]
+        index += 1
+        row.insert(0, index)       
     table_of_words.add_rows(list_values)
     table_of_words.align["Word"] = "l"
     print(table_of_words)
-    input("\nPress Enter to go back to the menu")
-    print("We are redirecting you back to the menu.")
-    time.sleep(2)
-    logged_menu(worksheet)
+    action = input("\nPress Enter to go back to the menu or [D] to delete a word: ").upper()
+    if action == "D":
+        while True:
+            word_id = int(input("\nEnter the ID of the word to delete: "))
+            if word_id > 0 and word_id <= index:
+                worksheet.delete_rows(word_id+3)
+                print("Word deleted. We'll now reload your list.")
+                time.sleep(2)
+                see_list_of_words(worksheet)
+            else:
+                print(f"Please inform a number between 1 - {index}")
+    else:
+        print("We are redirecting you back to the menu.")
+        time.sleep(2)
+        logged_menu(worksheet)
 
 
 def review_words(worksheet):
