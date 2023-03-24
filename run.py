@@ -5,12 +5,11 @@ import sys
 import time
 import gspread
 from google.oauth2.service_account import Credentials
-# from prettytable import PrettyTable
-from prettytable.colortable import ColorTable, Themes
-# from colorama import init, Fore
+from prettytable import PrettyTable, DOUBLE_BORDER
+from colorama import init, Fore
 import random
 
-# init(autoreset=True)
+init(autoreset=True)
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -210,11 +209,18 @@ def add_word(worksheet):
 
 def see_list_of_words(worksheet):
     clear()
-    print("L I S T  O F  W O R D S\n")
-    table_of_words = ColorTable()
-    table_of_words = ColorTable(theme=Themes.OCEAN)
-    table_of_words.field_names = worksheet.row_values(3)
-    table_of_words.add_rows(worksheet.get_all_values()[3:])
+    print("\n")
+    print(Fore.CYAN + "L I S T  O F  W O R D S\n".center(80))
+    table_of_words = PrettyTable()
+    table_of_words.set_style(DOUBLE_BORDER)
+    list_header = worksheet.row_values(3)
+    del list_header[1:4]
+    table_of_words.field_names = list_header
+    list_values = worksheet.get_all_values()[3:]
+    for row in list_values:
+        del row[1:4]
+    table_of_words.add_rows(list_values)
+    table_of_words.align["Word"] = "l"
     print(table_of_words)
     input("\nPress Enter to go back to the menu")
     print("We are redirecting you back to the menu.")
