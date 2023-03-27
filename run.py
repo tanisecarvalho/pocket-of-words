@@ -3,11 +3,12 @@ from getpass import getpass
 from os import system, name
 import sys
 import time
+import random
 import gspread
 from google.oauth2.service_account import Credentials
 from prettytable import PrettyTable, DOUBLE_BORDER
 from colorama import init, Fore
-import random
+import bcrypt
 
 init(autoreset=True)
 
@@ -98,9 +99,12 @@ def register():
             print("Username already in use. Please try again.\n")
         else:
             password = getpass("Password: ")
+            bytes = password.encode("utf-8")
+            salt = bcrypt.gensalt()
+            hash = bcrypt.hashpw(bytes, salt)
             worksheet.append_row(["Username", "Password", "Date"])
             worksheet.format('A1:C1', {'textFormat': {'bold': True}})
-            worksheet.append_row([username, password, str(datetime.now().date())])
+            worksheet.append_row([username, hash.decode('utf-8'), str(datetime.now().date())])
             worksheet.append_row([
                 "Word", 
                 "Sentence", 
@@ -156,7 +160,11 @@ def login():
             registered_password = worksheet.acell('B2').value
             while True:
                 password = getpass("Password: ")
-                if password == registered_password:
+                # bytes1 = password.encode('utf-8')
+                result = bcrypt.checkpw(password.encode('utf-8'), registered_password.encode('utf-8'))
+                
+                print(result)
+                if result:
                     return worksheet
                 else:
                     print("Wrong Password. Please try again.\n")
