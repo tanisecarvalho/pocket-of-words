@@ -62,6 +62,11 @@ def logo():
     print(center_logo(logo.splitlines(), 80))
 
 
+def invalid_option_message():
+    print(Fore.RED + "Invalid option. Please try again.".center(80))
+    time.sleep(2)
+     
+
 def main_menu():
     while True:
         logo()
@@ -86,6 +91,8 @@ def main_menu():
             print("Sad to see you going. Please, come back soon.".center(80))
             time.sleep(2)
             sys.exit(0)
+        else:
+            invalid_option_message()
 
 
 def register():
@@ -145,6 +152,8 @@ def logged_menu(worksheet):
             print("Sad to see you going. Please, come back soon.".center(80))
             time.sleep(2)
             main_menu()
+        else:
+            invalid_option_message()
 
 
 def login():
@@ -305,6 +314,10 @@ def select_words(list_of_words, total_words, worksheet):
             
 
     print("\nCongratulations You reviewed all the cards", current_index)
+    input("\nPress Enter to go back to the menu")
+    print("We are redirecting you back to the menu.")
+    time.sleep(2)
+    logged_menu(worksheet)
 
 
 def print_card(current_word, state="initial"):
