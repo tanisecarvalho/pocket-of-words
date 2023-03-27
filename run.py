@@ -86,8 +86,7 @@ def exit_program():
     """
     print_logo()
     print("Sad to see you going. Please, come back soon.\n".center(80))
-    print("To start again click on the 'RUN PROGRAM' button above.\n".center(80))
-    time.sleep(2)
+    print("To start again click on the 'RUN PROGRAM' button above.".center(80))
     sys.exit(0)
 
 def main_menu():
@@ -98,9 +97,8 @@ def main_menu():
     """
     while True:
         print_logo()
-        print("Welcome to Pocket of Words\n".center(80))
-        print("To Start, press one of the options bellow + Enter".center(80))
-        print("[R] to Register | [L] to Login | [G] to Read our Guide | [E] to Exit".center(80))
+        print("To Start, enter of the options bellow + Enter".center(80))
+        print(Fore.CYAN + "[R] to Register | [L] to Login | [G] to Read our Guide | [E] to Exit".center(80))
         option = getpass("").upper()
         if option == "R":
             worksheet = register()
@@ -123,7 +121,7 @@ def main_menu():
 
 def register():
     clear()
-    print("R E G I S T E R\n")
+    print("\n" + Fore.CYAN + "R E G I S T E R\n".center(80))
     while True:
         username = input("Username: ")
         try:
@@ -159,10 +157,10 @@ def register():
 def logged_menu(worksheet):
     while True:
         clear()
-        print("Welcome to Pocket of Words".center(80))
-        print("You're now logged in.\n".center(80))
-        print("Press one of the options bellow + Enter".center(80))
-        print("[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
+        print("\n" + Fore.CYAN + "Welcome to Pocket of Words".center(80))
+        print("You're now logged in.\n\n".center(80))
+        print("Enter one of the options bellow + Enter".center(80))
+        print(Fore.CYAN + "[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
               .center(80))
         option = getpass("").upper()
         if option == "A":
@@ -182,8 +180,8 @@ def logged_menu(worksheet):
 
 def login():
     clear()
-    print("L O G I N\n")
-    while True: 
+    print("\n" + Fore.CYAN + "L O G I N\n".center(80))
+    while True:
         username = input("Username: ")
         try:
             worksheet = SHEET.worksheet(username)
@@ -206,7 +204,7 @@ def login():
 
 def guide():
     clear()
-    print("\nG U I D E\n")
+    print("\n" + Fore.CYAN + "G U I D E\n".center(80))
     guide = "About Us\n"
     guide += "\nPocket of Words was created to help people who want to learn a new language.\n"
     guide += "Here you can insert new words that you learnt and review them.\n"
@@ -226,7 +224,7 @@ def guide():
 
 def add_word(worksheet):
     clear()
-    print("A D D  A  W O R D\n")
+    print("\n" + Fore.CYAN + "A D D  A  W O R D\n".center(80))
     word = input("New word: ")
     sentence = input("A sentence to help me remember: ")
     translation = input("Translation: ")
@@ -250,8 +248,7 @@ def add_word(worksheet):
 
 def see_list_of_words(worksheet):
     clear()
-    print("\n")
-    print(Fore.CYAN + "L I S T  O F  W O R D S\n".center(80))
+    print("\n" + Fore.CYAN + "L I S T  O F  W O R D S\n".center(80))
     table_of_words = PrettyTable()
     table_of_words.set_style(DOUBLE_BORDER)
     list_header = worksheet.row_values(3)
@@ -292,7 +289,8 @@ def review_words(worksheet):
     total_words = len(list_of_words)
     while True:
         clear()
-        print("R E V I E W  W O R D S\n")
+        print()
+        print("\n" + Fore.CYAN + "R E V I E W  W O R D S\n".center(80))
         how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
         if how_many_words > 0 and how_many_words <= total_words:
             select_words(list_of_words, how_many_words, worksheet)
@@ -318,7 +316,7 @@ def select_words(list_of_words, total_words, worksheet):
         if answer == "H":
             state = "hint"
         elif answer == "Q":
-            print("We are redirecting you back to the menu.")
+            print("\n" + "We are redirecting you back to the menu.".center(80))
             time.sleep(2)
             logged_menu(worksheet)
         else:
@@ -326,13 +324,13 @@ def select_words(list_of_words, total_words, worksheet):
             current_word = print_card(current_word, "answer")
             if answer == current_word[2].upper():
                 current_word[6] = int(current_word[6]) + 1
-                print("\nCongratulations! You got it!")
+                print(Fore.GREEN + "\n" + "Congratulations! You got it!".center(80))
             else:
                 current_word[7] = int(current_word[7]) + 1
-                print("\nOh no! Better luck next time!")
+                print(Fore.RED + "\n" + "Oh no! Better luck next time!".center(80))
             id = 'A'+str(current_word[8])+':H'+str(current_word[8])
             worksheet.update(id, [current_word[:8]])
-            input("\nPress [Enter] to go for the next card")
+            input("\n" + "Press [Enter] to go for the next card".center(80))
             state = "initial"
             current_index += 1
             
@@ -354,7 +352,7 @@ def print_card(current_word, state="initial"):
     card = ''
     card_sides = ''
 
-    card_content = [current_word[0], "Here a sentence to help you remember the word.", "ANSWER"]
+    card_content = [current_word[0], "Press [H] to see a hint", "ANSWER"]
 
     if state == "hint" :
         current_word[5] = int(current_word[5]) + 1
@@ -384,8 +382,8 @@ def print_card(current_word, state="initial"):
         card_sides += '|\n'
 
     card_final = ' ' + card + '\n' + card_sides + ' ' + card
-    print(card_final.center(80))
-    
+    print("\n")
+    print(center_logo(card_final.splitlines(), 80))
 
     return current_word
 
