@@ -23,22 +23,29 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('pocket_of_words')
 
-default_card_content = ["WORD", "Here a sentence to help you remember the word.", "ANSWER"]
 
-
+# Code adapted from GeeksForGeeks: How to clear screen in python?
 def clear():
+    """
+    Clear the screen
+    """
     _ = system("cls" if name == "nt" else "clear")
 
-
+# Code from stackoverflow: Centering Ascii Graphics Python
 def center_logo(logo, width):
-    """Manual centering"""
+    """
+    Manual centering
+    """
     padding =  ' '*(width//2)
     parts = [ padding[0: (width-len(p))//2+1]+p for p in logo]
     return '\n'.join(parts)
 
 
-def logo():
-    logo = ('''
+def print_logo():
+    """
+    Clear screen and print logo in cyan.
+    """
+    logo = '''
    ___           _        _    
   / _ \___   ___| | _____| |_  
  / /_)/ _ \ / __| |/ / _ \ __| 
@@ -57,19 +64,40 @@ def logo():
  \  /\  / (_) | | | (_| \__ \  
   \/  \/ \___/|_|  \__,_|___/  
                                
-    ''')
+    '''
     clear()
-    print(center_logo(logo.splitlines(), 80))
+    print(Fore.CYAN + center_logo(logo.splitlines(), 80))
 
 
 def invalid_option_message():
+    """
+    Print message in red for invalid option.
+    It has a time.sleep of 2 seconds before the menu appear again.
+    It's called on menu validation.
+    """
     print(Fore.RED + "Invalid option. Please try again.".center(80))
     time.sleep(2)
-     
+
+
+def exit_program():
+    """
+    Print logo and exit message.
+    Exist system.
+    """
+    print_logo()
+    print("Sad to see you going. Please, come back soon.\n".center(80))
+    print("To start again click on the 'RUN PROGRAM' button above.\n".center(80))
+    time.sleep(2)
+    sys.exit(0)
 
 def main_menu():
+    """
+    Print the main menu.
+    Call the print_logo and print the options for the main menu.
+    Redirect according to user input.
+    """
     while True:
-        logo()
+        print_logo()
         print("Welcome to Pocket of Words\n".center(80))
         print("To Start, press one of the options bellow + Enter".center(80))
         print("[R] to Register | [L] to Login | [G] to Read our Guide | [E] to Exit".center(80))
@@ -88,9 +116,7 @@ def main_menu():
             guide()
             break
         elif option == "E":
-            print("Sad to see you going. Please, come back soon.".center(80))
-            time.sleep(2)
-            sys.exit(0)
+            exit_program()
         else:
             invalid_option_message()
 
@@ -149,9 +175,7 @@ def logged_menu(worksheet):
             see_list_of_words(worksheet)
             break
         elif option == "E":
-            print("Sad to see you going. Please, come back soon.".center(80))
-            time.sleep(2)
-            main_menu()
+            exit_program()
         else:
             invalid_option_message()
 
