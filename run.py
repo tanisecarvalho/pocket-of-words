@@ -4,6 +4,7 @@ from os import system, name
 import sys
 import time
 import random
+import re
 import gspread
 from google.oauth2.service_account import Credentials
 from prettytable import PrettyTable, DOUBLE_BORDER
@@ -120,36 +121,59 @@ def main_menu():
 
 
 def register():
-    clear()
-    print("\n" + Fore.CYAN + "R E G I S T E R\n".center(80))
+    """
+    Create worksheet for the user.
+    Require username, password.
+    Validate if user has only letters and between 4-10 caracteres.
+    Validate if password has 8 caracteres.
+    """
+    username_pattern = re.compile(r"[\w+]{4,10}$")
+
     while True:
+        clear()
+        print("\n" + Fore.CYAN + "R E G I S T E R\n".center(80))
         username = input("Username: ")
-        try:
-            worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
-        except gspread.exceptions.APIError as e:
-            print("Username already in use. Please try again.\n")
+        if re.fullmatch(username_pattern, username):
+            try:
+                worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
+            except gspread.exceptions.APIError as e:
+                print("\n" + Fore.RED + "Username already in use. Please try again.\n")
+                time.sleep(2)
+            else:
+                while True:
+                    password = getpass("Password: ")
+                    if len(password) < 8:
+                        print("\n" + Fore.RED +
+                            "Password must have a minimum of 8 caracteres.".center(80))
+                        print("\n" + Fore.RED + "Please, try again!".center(80))
+                    else:
+                        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+                        worksheet.append_row(["Username", "Password", "Date"])
+                        worksheet.format('A1:C1', {'textFormat': {'bold': True}})
+                        worksheet.append_row([
+                            username,
+                            hashed_password.decode('utf-8'),
+                            str(datetime.now().date())
+                            ])
+                        worksheet.append_row([
+                            "Word", 
+                            "Sentence", 
+                            "Translation", 
+                            "Date Reviewed", 
+                            "Reviews", 
+                            "Used Hints",
+                            "Correct",	
+                            "Incorrect"
+                            ])
+                        worksheet.format('A3:H3', {'textFormat': {'bold': True}})
+                        print("\nUser created successfully!")
+                        time.sleep(2)
+                        return worksheet
         else:
-            password = getpass("Password: ")
-            bytes = password.encode("utf-8")
-            salt = bcrypt.gensalt()
-            hash = bcrypt.hashpw(bytes, salt)
-            worksheet.append_row(["Username", "Password", "Date"])
-            worksheet.format('A1:C1', {'textFormat': {'bold': True}})
-            worksheet.append_row([username, hash.decode('utf-8'), str(datetime.now().date())])
-            worksheet.append_row([
-                "Word", 
-                "Sentence", 
-                "Translation", 
-                "Date Reviewed", 
-                "Reviews", 
-                "Used Hints",
-                "Correct",	
-                "Incorrect"
-                ])
-            worksheet.format('A3:H3', {'textFormat': {'bold': True}})
-            print("\nUser created successfully!")
-            time.sleep(2)
-            return worksheet
+            print("\n" + Fore.RED +
+                  "Username must be alfanumeric and have between 4-10 caracteres.".center(80))
+            print("\n" + Fore.RED + "Please, try again!".center(80))
+            time.sleep(3)
 
     return None
 
@@ -216,8 +240,8 @@ def guide():
     guide += "5. Enter the translation of the word on your mother tongue.\n"
     guide += "6. Now you can add more words, review, delete, and see a list.\n"
     print(guide.center(80))
-    input("\nPress Enter to go back to the menu")
-    print("We are redirecting you back to the menu.")
+    input("\n" + "Press Enter to go back to the menu".center(80))
+    print("\n" + "We are redirecting you back to the menu.".center(80))
     time.sleep(2)
     main_menu()
 
@@ -228,6 +252,8 @@ def add_word(worksheet):
     word = input("New word: ")
     sentence = input("A sentence to help me remember: ")
     translation = input("Translation: ")
+    # max size for word is 25
+    # max size for sentence and translation is 56
     try:
         worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
     except gspread.exceptions.APIError as e:
@@ -241,7 +267,7 @@ def add_word(worksheet):
         if option == "Y":
             add_word(worksheet)
         else:
-            print("We are redirecting you back to the menu.")
+            print("\n" + "We are redirecting you back to the menu.".center(80))
             time.sleep(2)
             logged_menu(worksheet)
 
@@ -275,7 +301,7 @@ def see_list_of_words(worksheet):
             else:
                 print(f"Please inform a number between 1 - {index}")
     else:
-        print("We are redirecting you back to the menu.")
+        print("\n" + "We are redirecting you back to the menu.".center(80))
         time.sleep(2)
         logged_menu(worksheet)
 
@@ -334,10 +360,10 @@ def select_words(list_of_words, total_words, worksheet):
             state = "initial"
             current_index += 1
             
-
-    print("\nCongratulations You reviewed all the cards", current_index)
-    input("\nPress Enter to go back to the menu")
-    print("We are redirecting you back to the menu.")
+    clear()
+    print("\n" + Fore.CYAN + "Congratulations You reviewed all the cards".center(80))
+    input("\n" + "Press Enter to go back to the menu".center(80))
+    print("\n" + "We are redirecting you back to the menu.".center(80))
     time.sleep(2)
     logged_menu(worksheet)
 
