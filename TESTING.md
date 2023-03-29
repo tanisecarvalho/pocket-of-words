@@ -79,6 +79,11 @@ I used Chrome Developer Tools' Lighthouse to test the Performance, Accessibility
 | Exit | Open the Exit Message | Press E + Enter | Opens the Exit Message | Pass |
 | None of the Options on the Menu | Display invalid option message | Press Any other key + Enter or only Enter | Displays invalid option message | Pass |
 
+Exit
+
+![Exit](docs/testing/exit.JPG)
+
+
 Display invalid option message
 ![Invalid Option](docs/testing/main-menu-invalid.JPG)
 
