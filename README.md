@@ -302,3 +302,5 @@ If you would like to edit your copy of this repository on Gitpod, you will need 
 ### Acknowledgments
 
 I would like to thank my Code Institute mentor, Chris Quinn for his support and insightful feedbacks. Plus, to my friends and family for being the first users and hearing me talking about this project since day 1.
+
+[Back to Top](<#pocket-of-words>)
