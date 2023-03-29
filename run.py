@@ -199,7 +199,8 @@ def register():
                             ])
                         worksheet.format('A3:H3',
                                          {'textFormat': {'bold': True}})
-                        print("\nUser created successfully!")
+                        print("\n" + Fore.GREEN +
+                              "User created successfully!".center(80))
                         time.sleep(2)
                         return worksheet
         else:
