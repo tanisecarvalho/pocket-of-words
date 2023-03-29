@@ -67,7 +67,7 @@ I used Chrome Developer Tools' Lighthouse to test the Performance, Accessibility
 | I want to know if my word is correct/incorrect. | When reviewing the words the system will display if the user guessed the word correct or not. |
 
 
-### Features Testing
+### Full Testing
 
 `Main Menu`
 
@@ -156,9 +156,13 @@ Display invalid option message
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-
+| Display List of Words | Display list of words and ask user if wants to delete a word | - | Displays list of words and asks user if wants to delete a word | Pass | ![display list](docs/testing/list-main.JPG) |
+| Go back or Delete word | Only accept Enter or D | Enter another key | Only accept Enter or D | Pass | ![list wrong option](docs/testing/list-invalid.JPG) |
+| Go back or Delete word | Display message and redirects to menu | Press Enter | Displays message and redirects to menu | Pass | ![list enter](docs/testing/list-back.JPG) |
+| Go back or Delete word | Ask user for ID to delete | Press D + Enter | Asks user for ID to delete | Pass | ![list delete](docs/testing/list-delete.JPG) |
+| Delete word - Validation Value Type | Only accept numbers | Enter a letter | Only accepts numbers | Pass | ![list delete wrong value](docs/testing/list-delete-invalid.JPG) |
+| Delete word - Invalid ID | Only accept numbers between and last ID on the list | Enter a number higher than the last ID | Only accepts numbers between and last ID on the list | Pass | ![list delete higher value](docs/testing/list-delete-more.JPG) |
+| Delete word - Success | Display message that the word was deleted and reload list | Enter correct ID | Displays message that the word was deleted and reloads list | Pass | ![list deleted](docs/testing/list-deleted.JPG) ![list reload](docs/testing/list-reload.JPG) |
 
 ---
 
@@ -166,7 +170,7 @@ Display invalid option message
 
 ### Known Bugs
 
-The List of Words does not centralise.
+* The List of Words does not centralise.
 
 ---
 
