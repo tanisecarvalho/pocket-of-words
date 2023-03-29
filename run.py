@@ -395,23 +395,35 @@ def delete_word(worksheet, list_size):
 
 
 def review_words(worksheet):
+    """
+    Ask user for words to review.
+    Send list and total words to be selected.
+    """
+    # Create list starting from the position where words are on the worksheet
     list_of_words = worksheet.get_all_values()[3:]
-    i = 4
+    index_position = 4
     for word in list_of_words:
-        word.append(i)
-        i += 1
+        word.append(index_position)
+        index_position += 1
     total_words = len(list_of_words)
     while True:
         clear()
         print()
         print("\n" + Fore.CYAN + "R E V I E W  W O R D S\n".center(80))
-        how_many_words = int(input(f"You have {total_words} words. How many would you like to review? "))
-        if how_many_words > 0 and how_many_words <= total_words:
-            select_words(list_of_words, how_many_words, worksheet)
-            break
+        try:
+            how_many_words = int(input(
+                f"You have {total_words} words. How many would you like to review? "))
+        except ValueError:
+            print("\n" + Fore.RED + f"Please inform a number between 1 - {total_words}.".center(80))
+            time.sleep(2)
         else:
-            print(f"Please inform a number between 1 - {total_words}")
-            
+            if 0 < how_many_words <= total_words:
+                select_words(list_of_words, how_many_words, worksheet)
+            else:
+                print("\n" + Fore.RED +
+                      f"Please inform a number between 1 - {total_words}.".center(80))
+                time.sleep(2)
+
 
 def select_words(list_of_words, total_words, worksheet):
     chosen_words = random.sample(list_of_words, total_words)
