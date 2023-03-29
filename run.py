@@ -246,9 +246,9 @@ def login():
     Check if username exists.
     Check if password is the same as registered.
     """
-    clear()
-    print("\n" + Fore.CYAN + "L O G I N\n".center(80))
     while True:
+        clear()
+        print("\n" + Fore.CYAN + "L O G I N\n".center(80))
         username = input("Username: ")
         if validate_username(username):
             try:
