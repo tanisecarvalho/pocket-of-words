@@ -76,7 +76,7 @@ def invalid_option_message():
     It has a time.sleep of 2 seconds before the menu appear again.
     It's called on menu validation.
     """
-    print(Fore.RED + "Invalid option. Please try again.".center(80))
+    print("\n" + Fore.RED + "Invalid option. Please try again.".center(80))
     time.sleep(2)
 
 
@@ -238,7 +238,7 @@ def login():
             try:
                 worksheet = SHEET.worksheet(username)
             except gspread.exceptions.WorksheetNotFound:
-                print("Username not found. Please try again.\n")
+                print("\n" + Fore.RED + "Username not found. Please try again.\n")
             else:
                 registered_password = worksheet.acell('B2').value
                 while True:
@@ -280,29 +280,59 @@ def print_guide():
 
 
 def add_word(worksheet):
+    """
+    Add a new word to the list.
+    Max size for word is 25.
+    Max size for sentence and translation is 56.
+    """
     clear()
     print("\n" + Fore.CYAN + "A D D  A  W O R D\n".center(80))
-    word = input("New word: ")
-    sentence = input("A sentence to help me remember: ")
-    translation = input("Translation: ")
-    # max size for word is 25
-    # max size for sentence and translation is 56
+    word = ""
+    sentence = ""
+    translation = ""
+
+    while True:
+        word = input("New word: ")
+        if len(word) < 2 or len(word) > 25:
+            print("\n" + Fore.RED +
+                  "Word must have between 2-25 caracteres. Please, try again!\n".center(80))
+        else:
+            break
+
+    while True:
+        sentence = input("A sentence to help you remember: ")
+        if len(sentence) < 2 or len(sentence) > 56:
+            print("\n" + Fore.RED +
+                  "Sentence must have between 2-56 caracteres. Please, try again!\n".center(80))
+        else:
+            break
+
+    while True:
+        translation = input("Translation: ")
+        if len(translation) < 2 or len(translation) > 56:
+            print("\n" + Fore.RED +
+                  "Translation must have between 2-56 caracteres. Please, try again!\n".center(80))
+        else:
+            break
+
     try:
         worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
-    except gspread.exceptions.APIError as e:
+    except gspread.exceptions.APIError:
         print("An error occurred on adding your word. Please try again.\n")
         time.sleep(2)
         add_word(worksheet)
     else:
-        print("\nWord added successfully!")
-        print("Would you like to add another word?")
-        option = input("Y/N? ").upper()
-        if option == "Y":
-            add_word(worksheet)
-        else:
-            print("\n" + "We are redirecting you back to the menu.".center(80))
-            time.sleep(2)
-            logged_menu(worksheet)
+        print("\n" + Fore.GREEN + "Word added successfully!".center(80))
+        while True:
+            option = input("\nWould you like to add another word? (Y/N): ").upper()
+            if option == "Y":
+                add_word(worksheet)
+            elif option == "N":
+                print("\n" + "We are redirecting you back to the menu.".center(80))
+                time.sleep(2)
+                logged_menu(worksheet)
+            else:
+                invalid_option_message()
 
 
 def see_list_of_words(worksheet):
