@@ -426,10 +426,14 @@ def review_words(worksheet):
 
 
 def select_words(list_of_words, total_words, worksheet):
+    """
+    Select the amount of words informed by the user.
+    Choose random words from the list.
+    """
     chosen_words = random.sample(list_of_words, total_words)
     current_index = 0
     state = "initial"
-    
+
     while current_index < total_words:
         clear()
         if state == "initial":
@@ -470,7 +474,11 @@ def select_words(list_of_words, total_words, worksheet):
 
 def print_card(current_word, state="initial"):
     """
-    Prints the card for review
+    Print the card for review.
+    There are three states:
+        initial: Print showing only the word
+        hint: Print showing the hint
+        answer: Print showing all
     """
     word_index = 0
     CARD_SIZE = 58
@@ -513,4 +521,13 @@ def print_card(current_word, state="initial"):
 
     return current_word
 
-main_menu()
+
+def main():
+    """
+    Start the program.
+    Call main_menu to run the program.
+    """
+    main_menu()
+
+
+main()
