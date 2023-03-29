@@ -86,8 +86,8 @@ Display invalid option message
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with less than 4 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User less](docs/testing/user-less-length.JPG) |
-| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with more than 10 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User more](docs/testing/user-more-length.JPG) |
+| Username - length validation | Only accept usernames between 4-10 characteres | Enter user with less than 4 characteres | Only accepts usernames between 4-10 characteres | Pass | ![User less](docs/testing/user-less-length.JPG) |
+| Username - length validation | Only accept usernames between 4-10 characteres | Enter user with more than 10 characteres | Only accepts usernames between 4-10 characteres | Pass | ![User more](docs/testing/user-more-length.JPG) |
 | Username - alphanumeric validation | Only accept usernames with alphanumeric characteres | Enter user with special characteres | Only accepts usernames with alphanumeric characteres | Pass | ![User alphanumeric](docs/testing/user-alpha.JPG) |
 | Username - existent | Only accept usernames that are different from the current ones registered | Enter username already registered before | Only accepts usernames that are different from the current ones registered | Pass | ![User existent](docs/testing/user-in-use.JPG) |
 | Password - minimum length | Only accept passwords with 8 or more characteres | Enter password with less than 8 characteres | Only accept passwords with 8 or more characteres | Pass | ![User password](docs/testing/user-password.JPG) |
@@ -97,8 +97,8 @@ Display invalid option message
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with less than 4 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User less](docs/testing/login-user-less.JPG) |
-| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with more than 10 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User more](docs/testing/login-user-more.JPG) |
+| Username - length validation | Only accept usernames between 4-10 characteres | Enter user with less than 4 characteres | Only accepts usernames between 4-10 characteres | Pass | ![User less](docs/testing/login-user-less.JPG) |
+| Username - length validation | Only accept usernames between 4-10 characteres | Enter user with more than 10 characteres | Only accepts usernames between 4-10 characteres | Pass | ![User more](docs/testing/login-user-more.JPG) |
 | Username - alphanumeric validation | Only accept usernames with alphanumeric characteres | Enter user with special characteres | Only accepts usernames with alphanumeric characteres | Pass | ![User alphanumeric](docs/testing/login-user-alpha.JPG) |
 | Username - existent | Only accept usernames that are registered | Enter username that does not exist | Only accepts usernames that are registered | Pass | ![User existent](docs/testing/login-user-not-found.JPG) |
 | Password - minimum length | Only accept passwords with 8 or more characteres | Enter password with less than 8 characteres | Only accept passwords with 8 or more characteres | Pass | ![User password less](docs/testing/login-password-less.JPG) 
@@ -114,8 +114,8 @@ Password - correct |Only accept the correct password | Enter incorrect password 
 
 `Logged Menu`
 
-| Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
-| --- | --- | --- | --- | --- | --- |
+| Feature | Expected Outcome | Testing Performed | Result | Pass/Fail |
+| --- | --- | --- | --- | --- |
 | Add a Word | Open the Add a Word Section | Press A + Enter | Opens the Add a Word Section | Pass |
 | Review Words | Open the Review Words Section | Press R + Enter | Opens the Review Words Section | Pass |
 | See your List | Open the See your List Section | Press L + Enter | Opens the See your List Section | Pass |
@@ -129,15 +129,28 @@ Display invalid option message
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| New Word | Only accept words between 2-25 characteres | Enter word with less than 2 characteres | Only accepts words between 2-25 characteres | Pass | ![word length](docs/testing/add-word-new-length.JPG) |
+| Sentence | Only accept sentences between 2-56 characteres | Enter sentence with more than 56 characteres | Only accepts sentences between 2-56 characteres | Pass | ![sentence length](docs/testing/add-word-sentence-length.JPG) |
+| Translation | Only accept words between 2-56 characteres | Enter word with less than 2 characteres | Only accepts words between 2-56 characteres | Pass | ![translation length](docs/testing/add-word-translation-length.JPG) |
+| Add Word | Add new word to worksheet | Enter word, sentence, translation correctly | Adds new word to worksheet | Pass | ![word added](docs/testing/add-word-success.JPG) |
+| Add Another Word - Yes| Yes to add new word| Press Y + Enter | Displays Add a Word | Pass | ![word yes](docs/testing/add-word-yes.JPG) |
+| Add Another Word - No | No to add new word | Press N + Enter | Displays messages to go back to main menu | Pass | ![word no](docs/testing/add-word-not.JPG) |
+| Add Another Word - Other Option | Display invalid option message | Press Any other key + Enter or only Enter | Displays invalid option message | Pass | ![word other option](docs/testing/add-word-invalid.JPG) |
 
 `Review Words`
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Display total | Display total words and ask how many words the user want to review | - | Displays total words and asks how many words the user want to review | Pass | ![display total](docs/testing/review-main.JPG) |
+| How many to review - Value Type | Only accept numbers | Enter a letter | Only accepts numbers  | Pass | ![value total type](docs/testing/review-wrong.JPG) |
+| How many to review - Value | Only accept numbers between 1 and total | Enter a number more than total | Only accepts numbers between 1 and total  | Pass | ![value total more](docs/testing/review-more.JPG) |
+| Cards - Start | Display only the word | - | Displays only the word  | Pass | ![card start](docs/testing/review-card.JPG) |
+| Cards - Hint | Display the word and a hint | Press H + Enter | Displays the word and a hint  | Pass | ![card hint](docs/testing/review-card-hint.JPG) |
+| Cards - Correct Answer | Display the word, hint and answer | Enter correct answer | Displays the word, hint and answer | Pass | ![card correct](docs/testing/review-card-correct.JPG) |
+| Cards - Incorrect Answer | Display the word, hint and answer | Enter incorrect answer | Displays the word, hint and answer | Pass | ![card incorrect](docs/testing/review-card-incorrect.JPG) |
+| Cards - Quit | Display message that redirects to menu | Press Q + Enter | Displays message that redirects to menu | Pass | ![card quit](docs/testing/review-card-quit.JPG) |
+| Cards - Finish | Display message that review is finished | Enter to finish | Displays message that review is finished | Pass | ![card finished](docs/testing/review-finished.JPG) |
+
 
 `See your List`
 
