@@ -78,7 +78,6 @@ I used Chrome Developer Tools' Lighthouse to test the Performance, Accessibility
 | Guide | Open the Guide Section | Press G + Enter | Opens the Guide Section | Pass |
 | Exit | Open the Exit Message | Press E + Enter | Opens the Exit Message | Pass |
 | None of the Options on the Menu | Display invalid option message | Press Any other key + Enter or only Enter | Displays invalid option message | Pass |
-|  |  |  |  |  |
 
 Display invalid option message
 ![Invalid Option](docs/testing/main-menu-invalid.JPG)
@@ -93,29 +92,38 @@ Display invalid option message
 | Username - existent | Only accept usernames that are different from the current ones registered | Enter username already registered before | Only accepts usernames that are different from the current ones registered | Pass | ![User existent](docs/testing/user-in-use.JPG) |
 | Password - minimum length | Only accept passwords with 8 or more characteres | Enter password with less than 8 characteres | Only accept passwords with 8 or more characteres | Pass | ![User password](docs/testing/user-password.JPG) |
 | Create user | Display the logged menu and create worksheet on the Google Spreadsheet with the username | Enter valids username and password | Displays the logged menu and create worksheet on the Google Spreadsheet with the username | Pass | ![User created](docs/testing/user-created.JPG) ![User created logged](docs/testing/user-created-logged.JPG) ![User created worksheet](docs/testing/user-created-worksheet.JPG)|
-|  |  |  |  |  |  |
 
 `Login`
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with less than 4 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User less](docs/testing/login-user-less.JPG) |
+| Username - length validation | Only accept usernames between 4-10 caracteres | Enter user with more than 10 characteres | Only accepts usernames between 4-10 caracteres | Pass | ![User more](docs/testing/login-user-more.JPG) |
+| Username - alphanumeric validation | Only accept usernames with alphanumeric characteres | Enter user with special characteres | Only accepts usernames with alphanumeric characteres | Pass | ![User alphanumeric](docs/testing/login-user-alpha.JPG) |
+| Username - existent | Only accept usernames that are registered | Enter username that does not exist | Only accepts usernames that are registered | Pass | ![User existent](docs/testing/login-user-not-found.JPG) |
+| Password - minimum length | Only accept passwords with 8 or more characteres | Enter password with less than 8 characteres | Only accept passwords with 8 or more characteres | Pass | ![User password less](docs/testing/login-password-less.JPG) 
+Password - correct |Only accept the correct password | Enter incorrect password | Only accepts the correct password | Pass | ![User password correct](docs/testing/login-password-wrong.JPG) |
+| Log in | Display the logged menu | Enter valids username and password | Displays the logged menu | Pass | ![User created](docs/testing/login-logged.JPG) |
 
 `Guide`
 
-| Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
-| --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Feature | Expected Outcome | Testing Performed | Result | Pass/Fail |
+| --- | --- | --- | --- | --- |
+| Main Menu | Go back to the main menu | Press Enter | Goes back to main menu | Pass |
 
 
 `Logged Menu`
 
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail | Image |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| Add a Word | Open the Add a Word Section | Press A + Enter | Opens the Add a Word Section | Pass |
+| Review Words | Open the Review Words Section | Press R + Enter | Opens the Review Words Section | Pass |
+| See your List | Open the See your List Section | Press L + Enter | Opens the See your List Section | Pass |
+| Exit | Open the Exit Message | Press E + Enter | Opens the Exit Message | Pass |
+| None of the Options on the Menu | Display invalid option message | Press Any other key + Enter or only Enter | Displays invalid option message | Pass |
+
+Display invalid option message
+![Invalid Option](docs/testing/logged-menu-invalid.JPG)
 
 `Add a Word`
 
