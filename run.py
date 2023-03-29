@@ -104,7 +104,7 @@ def main_menu():
     menu_options += "| [G] to Read our Guide | [E] to Exit"
     while True:
         print_logo()
-        print("To Start, enter of the options bellow + Enter".center(80))
+        print("To Start, enter one of the options bellow + Enter".center(80))
         print(Fore.CYAN + menu_options.center(80))
         option = getpass("").upper()
         if option == "R":
