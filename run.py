@@ -259,18 +259,20 @@ def print_guide():
     Print the guide on how to use the system.
     """
     clear()
-    print("\n" + Fore.CYAN + "G U I D E\n".center(80))
-    guide = "About Us\n"
-    guide += "\nPocket of Words was created to help people who want to learn a new language.\n"
-    guide += "Here you can insert new words that you learnt and review them.\n"
-    guide += "\nHow to Use\n"
-    guide += "\n1. Register with a username and password.\n"
-    guide += "2. If you're already registered enter your name and password.\n"
+    print("\n" + Fore.CYAN + "G U I D E\n\n".center(80))
+    print(Fore.CYAN + "About Us\n\n".center(80))
+    print(
+        "Pocket of Words was created to help people who want to learn a new language."
+        .center(80))
+    print("Here you can add new words that you learnt and review them.\n\n".center(80))
+    print(Fore.CYAN + "How to Use\n\n".center(80))
+    guide = "1. Register with a username and password.\n"
+    guide += "2. If you're already registered enter your username and password.\n"
     guide += "3. Enter the new word you learnt.\n"
     guide += "4. Enter a sentence to help you remember the word.\n"
-    guide += "5. Enter the translation of the word on your mother tongue.\n"
-    guide += "6. Now you can add more words, review, delete, and see a list.\n"
-    print(guide.center(80))
+    guide += "5. Enter the translation of the word on your language.\n"
+    guide += "6. Now you can add more words, review, delete, and see your list.\n"
+    print(guide)
     input("\n" + "Press Enter to go back to the menu".center(80))
     print("\n" + "We are redirecting you back to the menu.".center(80))
     time.sleep(2)
