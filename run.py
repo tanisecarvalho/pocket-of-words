@@ -1,3 +1,4 @@
+""" Main module of the program. Run all the functions. """
 from datetime import datetime
 from getpass import getpass
 from os import system, name
@@ -11,6 +12,7 @@ from prettytable import PrettyTable, DOUBLE_BORDER
 from colorama import init, Fore
 import bcrypt
 
+# to autoreset colors back to standart with colorama
 init(autoreset=True)
 
 SCOPE = [
@@ -32,13 +34,14 @@ def clear():
     """
     _ = system("cls" if name == "nt" else "clear")
 
+
 # Code from stackoverflow: Centering Ascii Graphics Python
 def center_logo(logo, width):
     """
     Manual centering
     """
-    padding =  ' '*(width//2)
-    parts = [ padding[0: (width-len(p))//2+1]+p for p in logo]
+    padding = ' '*(width//2)
+    parts = [padding[0: (width-len(p))//2+1]+p for p in logo]
     return '\n'.join(parts)
 
 
@@ -90,16 +93,19 @@ def exit_program():
     print("To start again click on the 'RUN PROGRAM' button above.".center(80))
     sys.exit(0)
 
+
 def main_menu():
     """
     Print the main menu.
     Call the print_logo and print the options for the main menu.
     Redirect according to user input.
     """
+    menu_options = "[R] to Register | [L] to Login "
+    menu_options += "| [G] to Read our Guide | [E] to Exit"
     while True:
         print_logo()
         print("To Start, enter of the options bellow + Enter".center(80))
-        print(Fore.CYAN + "[R] to Register | [L] to Login | [G] to Read our Guide | [E] to Exit".center(80))
+        print(Fore.CYAN + menu_options.center(80))
         option = getpass("").upper()
         if option == "R":
             worksheet = register()
@@ -123,7 +129,7 @@ def main_menu():
 def validate_username(username):
     """
     Check if username is valid.
-    Validate if username is alfanumeric and has between 4-10 caracteres.
+    Validate if username is alfanumeric and has between 4-10 characters.
     """
     username_pattern = re.compile(r"[\w+]{4,10}$")
     if re.fullmatch(username_pattern, username):
@@ -135,11 +141,11 @@ def validate_username(username):
 def validate_password(password):
     """
     Check if password is valid.
-    Validate if username has 8 caracteres.
+    Validate if username has 8 characters.
     """
     if len(password) < 8:
         print("\n" + Fore.RED +
-            "Password must have a minimum of 8 caracteres.".center(80))
+              "Password must have a minimum of 8 characters.".center(80))
         print("\n" + Fore.RED + "Please, try again!".center(80))
         return False
     return True
@@ -158,39 +164,48 @@ def register():
         username = input("Username: ")
         if validate_username(username):
             try:
-                worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
+                worksheet = SHEET.add_worksheet(
+                    title=username,
+                    rows=1000,
+                    cols=8)
             except gspread.exceptions.APIError:
-                print("\n" + Fore.RED + "Username already in use. Please try again.\n")
+                print("\n" + Fore.RED +
+                      "Username already in use. Please try again.\n")
                 time.sleep(2)
             else:
                 while True:
                     password = getpass("Password: ")
                     if validate_password(password):
-                        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+                        hashed_password = bcrypt.hashpw(
+                            password.encode("utf-8"),
+                            bcrypt.gensalt())
                         worksheet.append_row(["Username", "Password", "Date"])
-                        worksheet.format('A1:C1', {'textFormat': {'bold': True}})
+                        worksheet.format('A1:C1',
+                                         {'textFormat': {'bold': True}})
                         worksheet.append_row([
                             username,
                             hashed_password.decode('utf-8'),
                             str(datetime.now().date())
                             ])
                         worksheet.append_row([
-                            "Word", 
-                            "Sentence", 
-                            "Translation", 
-                            "Date Reviewed", 
-                            "Reviews", 
+                            "Word",
+                            "Sentence",
+                            "Translation",
+                            "Date Reviewed",
+                            "Reviews",
                             "Used Hints",
-                            "Correct",	
+                            "Correct",
                             "Incorrect"
                             ])
-                        worksheet.format('A3:H3', {'textFormat': {'bold': True}})
+                        worksheet.format('A3:H3',
+                                         {'textFormat': {'bold': True}})
                         print("\nUser created successfully!")
                         time.sleep(2)
                         return worksheet
         else:
             print("\n" + Fore.RED +
-                  "Username must be alfanumeric and have between 4-10 caracteres.".center(80))
+                  "Username must be: alfanumeric and between 4-10 characters."
+                  .center(80))
             print("\n" + Fore.RED + "Please, try again!".center(80))
             time.sleep(3)
 
@@ -200,14 +215,14 @@ def logged_menu(worksheet):
     Print the menu after user has logged or registered.
     Redirecters user to the chosen option or shows invalid option message.
     """
+    menu_options = "[A] to Add a Word | [R] to Review Words "
+    menu_options += "| [L] to See your List | [E] to Exit"
     while True:
         clear()
         print("\n" + Fore.CYAN + "Welcome to Pocket of Words".center(80))
         print("You're now logged in.\n\n".center(80))
         print("Enter one of the options bellow + Enter".center(80))
-        print(Fore.CYAN +
-              "[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
-              .center(80))
+        print(Fore.CYAN + menu_options.center(80))
         option = getpass("").upper()
         if option == "A":
             add_word(worksheet)
@@ -238,7 +253,8 @@ def login():
             try:
                 worksheet = SHEET.worksheet(username)
             except gspread.exceptions.WorksheetNotFound:
-                print("\n" + Fore.RED + "Username not found. Please try again.\n")
+                print("\n" + Fore.RED +
+                      "Username not found. Please try again.\n")
             else:
                 registered_password = worksheet.acell('B2').value
                 while True:
@@ -251,7 +267,9 @@ def login():
                         if is_password:
                             return worksheet
 
-                        print("\n" + Fore.RED + "Wrong Password. Please, try again!\n".center(80))
+                        print("\n" + Fore.RED +
+                              "Wrong Password. Please, try again!\n"
+                              .center(80))
 
 
 def print_guide():
@@ -261,17 +279,17 @@ def print_guide():
     clear()
     print("\n" + Fore.CYAN + "G U I D E\n\n".center(80))
     print(Fore.CYAN + "About Us\n\n".center(80))
-    print(
-        "Pocket of Words was created to help people who want to learn a new language."
-        .center(80))
-    print("Here you can add new words that you learnt and review them.\n\n".center(80))
+    guide_description = "Pocket of Words was created to help people"
+    guide_description += " who want to learn a new language.\n"
+    print(guide_description.center(80))
+    print("Here you can add new words that you learnt and review them.\n\n"
+          .center(80))
     print(Fore.CYAN + "How to Use\n\n".center(80))
-    guide = "1. Register with a username and password.\n"
-    guide += "2. If you're already registered enter your username and password.\n"
-    guide += "3. Enter the new word you learnt.\n"
-    guide += "4. Enter a sentence to help you remember the word.\n"
-    guide += "5. Enter the translation of the word on your language.\n"
-    guide += "6. Now you can add more words, review, delete, and see your list.\n"
+    guide = "1. Register/login with a username and password.\n"
+    guide += "2. Enter the new word you learnt.\n"
+    guide += "3. Enter a sentence to help you remember the word.\n"
+    guide += "4. Enter the translation of the word on your language.\n"
+    guide += "5. Now you can add more words, review, delete and see your list."
     print(guide)
     input("\n" + "Press Enter to go back to the menu".center(80))
     print("\n" + "We are redirecting you back to the menu.".center(80))
@@ -295,28 +313,31 @@ def add_word(worksheet):
         word = input("New word: ")
         if len(word) < 2 or len(word) > 25:
             print("\n" + Fore.RED +
-                  "Word must have between 2-25 caracteres. Please, try again!\n".center(80))
+                  "Word must have between 2-25 characters. Please, try again!"
+                  .center(80) + "\n")
         else:
             break
 
     while True:
         sentence = input("A sentence to help you remember: ")
+        sentence_error_msg = "Sentence must have between 2-56 characters."
+        sentence_error_msg += " Please, try again!\n"
         if len(sentence) < 2 or len(sentence) > 56:
-            print("\n" + Fore.RED +
-                  "Sentence must have between 2-56 caracteres. Please, try again!\n".center(80))
+            print("\n" + Fore.RED + sentence_error_msg.center(80))
         else:
             break
 
     while True:
         translation = input("Translation: ")
+        translation_error_msg = "Translation must have between 2-56 characters"
+        translation_error_msg += ". Please, try again!\n"
         if len(translation) < 2 or len(translation) > 56:
-            print("\n" + Fore.RED +
-                  "Translation must have between 2-56 caracteres. Please, try again!\n".center(80))
+            print("\n" + Fore.RED + translation_error_msg.center(80))
         else:
             break
 
     try:
-        worksheet.append_row([word, sentence, translation," ", 0, 0, 0, 0])
+        worksheet.append_row([word, sentence, translation, " ", 0, 0, 0, 0])
     except gspread.exceptions.APIError:
         print("An error occurred on adding your word. Please try again.\n")
         time.sleep(2)
@@ -324,11 +345,13 @@ def add_word(worksheet):
     else:
         print("\n" + Fore.GREEN + "Word added successfully!".center(80))
         while True:
-            option = input("\nWould you like to add another word? (Y/N): ").upper()
+            option = input(
+                "\nWould you like to add another word? (Y/N): ").upper()
             if option == "Y":
                 add_word(worksheet)
             elif option == "N":
-                print("\n" + "We are redirecting you back to the menu.".center(80))
+                print("\n" +
+                      "We are redirecting you back to the menu.".center(80))
                 time.sleep(2)
                 logged_menu(worksheet)
             else:
@@ -362,7 +385,9 @@ def see_list_of_words(worksheet):
     table_of_words.align["Word"] = "l"
     print(table_of_words)
     while True:
-        action = input("\nPress Enter to go back to the menu or [D] to delete a word: ").upper()
+        action = input(
+            "\nPress Enter to go back to the menu or [D] to delete a word: "
+            ).upper()
         if action == "D":
             delete_word(worksheet, index)
         elif action == "":
@@ -381,17 +406,21 @@ def delete_word(worksheet, list_size):
         try:
             word_id = int(input("\nEnter the ID of the word to delete: "))
         except ValueError:
-            print("\n" + Fore.RED + f"Please inform a number between 1 - {list_size}.".center(80))
+            print("\n" + Fore.RED +
+                  f"Please inform a number between 1 - {list_size}."
+                  .center(80))
         else:
             if word_id > 0 and word_id <= list_size:
                 # Add 3 to word list to match position on the worksheet
                 worksheet.delete_rows(word_id+3)
-                print("\n" + Fore.GREEN + "Word deleted. We'll now reload your list.".center(80))
+                print("\n" + Fore.GREEN +
+                      "Word deleted. We'll now reload your list.".center(80))
                 time.sleep(2)
                 see_list_of_words(worksheet)
             else:
                 print("\n" + Fore.RED +
-                      f"Please inform a number between 1 - {list_size}.".center(80))
+                      f"Please inform a number between 1 - {list_size}."
+                      .center(80))
 
 
 def review_words(worksheet):
@@ -411,17 +440,20 @@ def review_words(worksheet):
         print()
         print("\n" + Fore.CYAN + "R E V I E W  W O R D S\n".center(80))
         try:
-            how_many_words = int(input(
-                f"You have {total_words} words. How many would you like to review? "))
+            print(f"You have {total_words} words.")
+            how_many_words = int(input("How many would you like to review? "))
         except ValueError:
-            print("\n" + Fore.RED + f"Please inform a number between 1 - {total_words}.".center(80))
+            print("\n" + Fore.RED +
+                  f"Please inform a number between 1 - {total_words}."
+                  .center(80))
             time.sleep(2)
         else:
             if 0 < how_many_words <= total_words:
                 select_words(list_of_words, how_many_words, worksheet)
             else:
                 print("\n" + Fore.RED +
-                      f"Please inform a number between 1 - {total_words}.".center(80))
+                      f"Please inform a number between 1 - {total_words}."
+                      .center(80))
                 time.sleep(2)
 
 
@@ -442,7 +474,9 @@ def select_words(list_of_words, total_words, worksheet):
             current_word[4] = int(current_word[4]) + 1
 
         current_word = print_card(current_word, state)
-        answer = input("\nPress [H] for a Hint | [Q] to Quit | or enter your answer: ").upper()
+        answer = input(
+            "\nPress [H] for a Hint | [Q] to Quit | or enter your answer: "
+            ).upper()
         if answer == "H":
             state = "hint"
         elif answer == "Q":
@@ -454,18 +488,21 @@ def select_words(list_of_words, total_words, worksheet):
             current_word = print_card(current_word, "answer")
             if answer == current_word[2].upper():
                 current_word[6] = int(current_word[6]) + 1
-                print(Fore.GREEN + "\n" + "Congratulations! You got it!".center(80))
+                print(Fore.GREEN + "\n" +
+                      "Congratulations! You got it!".center(80))
             else:
                 current_word[7] = int(current_word[7]) + 1
-                print(Fore.RED + "\n" + "Oh no! Better luck next time!".center(80))
-            id = 'A'+str(current_word[8])+':H'+str(current_word[8])
-            worksheet.update(id, [current_word[:8]])
+                print(Fore.RED + "\n" + "Oh no! Better luck next time!"
+                      .center(80))
+            worksheet_id = 'A'+str(current_word[8])+':H'+str(current_word[8])
+            worksheet.update(worksheet_id, [current_word[:8]])
             input("\n" + "Press [Enter] to go for the next card".center(80))
             state = "initial"
             current_index += 1
-            
+
     clear()
-    print("\n" + Fore.CYAN + "Congratulations You reviewed all the cards".center(80))
+    print("\n" + Fore.CYAN +
+          "Congratulations You reviewed all the cards".center(80))
     input("\n" + "Press Enter to go back to the menu".center(80))
     print("\n" + "We are redirecting you back to the menu.".center(80))
     time.sleep(2)
@@ -488,7 +525,7 @@ def print_card(current_word, state="initial"):
 
     card_content = [current_word[0], "Press [H] to see a hint", "ANSWER"]
 
-    if state == "hint" :
+    if state == "hint":
         current_word[5] = int(current_word[5]) + 1
         card_content = [current_word[0], current_word[1], "ANSWER"]
     elif state == "answer":
