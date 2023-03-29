@@ -129,7 +129,7 @@ def main_menu():
 def validate_username(username):
     """
     Check if username is valid.
-    Validate if username is alfanumeric and has between 4-10 characters.
+    Validate if username is alphanumeric and has between 4-10 characters.
     """
     username_pattern = re.compile(r"[\w+]{4,10}$")
     if re.fullmatch(username_pattern, username):
@@ -205,7 +205,7 @@ def register():
                         return worksheet
         else:
             print("\n" + Fore.RED +
-                  "Username must be: alfanumeric and between 4-10 characters."
+                  "Username must be: alphanumeric and between 4-10 characters."
                   .center(80))
             print("\n" + Fore.RED + "Please, try again!".center(80))
             time.sleep(3)
