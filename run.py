@@ -336,37 +336,62 @@ def add_word(worksheet):
 
 
 def see_list_of_words(worksheet):
+    """
+    Load the words the user has added.
+    Print it on a table.
+    Give user the option to delete words.
+    """
     clear()
     print("\n" + Fore.CYAN + "L I S T  O F  W O R D S\n".center(80))
     table_of_words = PrettyTable()
     table_of_words.set_style(DOUBLE_BORDER)
+    # Get the values from the 3rd row for headers
     list_header = worksheet.row_values(3)
+    # Delete the values Sentence, Translation and Date
     del list_header[1:4]
+    # Add an ID to the words to facilitate delete
     table_of_words.field_names = ["ID"] + list_header
     list_values = worksheet.get_all_values()[3:]
     index = 0
     for row in list_values:
         del row[1:4]
         index += 1
-        row.insert(0, index)       
+        row.insert(0, index)
     table_of_words.add_rows(list_values)
+    # Align words to the left
     table_of_words.align["Word"] = "l"
     print(table_of_words)
-    action = input("\nPress Enter to go back to the menu or [D] to delete a word: ").upper()
-    if action == "D":
-        while True:
+    while True:
+        action = input("\nPress Enter to go back to the menu or [D] to delete a word: ").upper()
+        if action == "D":
+            delete_word(worksheet, index)
+        elif action == "":
+            print("\n" + "We are redirecting you back to the menu.".center(80))
+            time.sleep(2)
+            logged_menu(worksheet)
+        else:
+            invalid_option_message()
+
+
+def delete_word(worksheet, list_size):
+    """
+    Delete a word from the user's list.
+    """
+    while True:
+        try:
             word_id = int(input("\nEnter the ID of the word to delete: "))
-            if word_id > 0 and word_id <= index:
+        except ValueError:
+            print("\n" + Fore.RED + f"Please inform a number between 1 - {list_size}.".center(80))
+        else:
+            if word_id > 0 and word_id <= list_size:
+                # Add 3 to word list to match position on the worksheet
                 worksheet.delete_rows(word_id+3)
-                print("Word deleted. We'll now reload your list.")
+                print("\n" + Fore.GREEN + "Word deleted. We'll now reload your list.".center(80))
                 time.sleep(2)
                 see_list_of_words(worksheet)
             else:
-                print(f"Please inform a number between 1 - {index}")
-    else:
-        print("\n" + "We are redirecting you back to the menu.".center(80))
-        time.sleep(2)
-        logged_menu(worksheet)
+                print("\n" + Fore.RED +
+                      f"Please inform a number between 1 - {list_size}.".center(80))
 
 
 def review_words(worksheet):
