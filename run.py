@@ -256,6 +256,7 @@ def login():
             except gspread.exceptions.WorksheetNotFound:
                 print("\n" + Fore.RED +
                       "Username not found. Please try again.\n")
+                time.sleep(2)
             else:
                 registered_password = worksheet.acell('B2').value
                 while True:
