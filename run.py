@@ -271,6 +271,12 @@ def login():
                         print("\n" + Fore.RED +
                               "Wrong Password. Please, try again!\n"
                               .center(80))
+        else:
+            print("\n" + Fore.RED +
+                  "Username must be: alphanumeric and between 4-10 characters."
+                  .center(80))
+            print("\n" + Fore.RED + "Please, try again!".center(80))
+            time.sleep(3)
 
 
 def print_guide():
