@@ -83,7 +83,7 @@ def invalid_option_message():
 def exit_program():
     """
     Print logo and exit message.
-    Exist system.
+    Exit system.
     """
     print_logo()
     print("Sad to see you going. Please, come back soon.\n".center(80))
@@ -112,7 +112,7 @@ def main_menu():
                 logged_menu(worksheet)
             break
         elif option == "G":
-            guide()
+            print_guide()
             break
         elif option == "E":
             exit_program()
@@ -120,33 +120,52 @@ def main_menu():
             invalid_option_message()
 
 
+def validate_username(username):
+    """
+    Check if username is valid.
+    Validate if username is alfanumeric and has between 4-10 caracteres.
+    """
+    username_pattern = re.compile(r"[\w+]{4,10}$")
+    if re.fullmatch(username_pattern, username):
+        return True
+
+    return False
+
+
+def validate_password(password):
+    """
+    Check if password is valid.
+    Validate if username has 8 caracteres.
+    """
+    if len(password) < 8:
+        print("\n" + Fore.RED +
+            "Password must have a minimum of 8 caracteres.".center(80))
+        print("\n" + Fore.RED + "Please, try again!".center(80))
+        return False
+    return True
+
+
 def register():
     """
     Create worksheet for the user.
     Require username, password.
-    Validate if user has only letters and between 4-10 caracteres.
-    Validate if password has 8 caracteres.
+    Validate username.
+    Validate password.
     """
-    username_pattern = re.compile(r"[\w+]{4,10}$")
-
     while True:
         clear()
         print("\n" + Fore.CYAN + "R E G I S T E R\n".center(80))
         username = input("Username: ")
-        if re.fullmatch(username_pattern, username):
+        if validate_username(username):
             try:
                 worksheet = SHEET.add_worksheet(title=username, rows=1000, cols=8)
-            except gspread.exceptions.APIError as e:
+            except gspread.exceptions.APIError:
                 print("\n" + Fore.RED + "Username already in use. Please try again.\n")
                 time.sleep(2)
             else:
                 while True:
                     password = getpass("Password: ")
-                    if len(password) < 8:
-                        print("\n" + Fore.RED +
-                            "Password must have a minimum of 8 caracteres.".center(80))
-                        print("\n" + Fore.RED + "Please, try again!".center(80))
-                    else:
+                    if validate_password(password):
                         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
                         worksheet.append_row(["Username", "Password", "Date"])
                         worksheet.format('A1:C1', {'textFormat': {'bold': True}})
@@ -175,58 +194,70 @@ def register():
             print("\n" + Fore.RED + "Please, try again!".center(80))
             time.sleep(3)
 
-    return None
-
 
 def logged_menu(worksheet):
+    """
+    Print the menu after user has logged or registered.
+    Redirecters user to the chosen option or shows invalid option message.
+    """
     while True:
         clear()
         print("\n" + Fore.CYAN + "Welcome to Pocket of Words".center(80))
         print("You're now logged in.\n\n".center(80))
         print("Enter one of the options bellow + Enter".center(80))
-        print(Fore.CYAN + "[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
+        print(Fore.CYAN +
+              "[A] to Add a Word | [R] to Review Words | [L] to See your List | [E] to Exit"
               .center(80))
         option = getpass("").upper()
         if option == "A":
             add_word(worksheet)
             break
-        elif option == "R":
+        if option == "R":
             review_words(worksheet)
             break
-        elif option == "L":
+        if option == "L":
             see_list_of_words(worksheet)
             break
-        elif option == "E":
+        if option == "E":
             exit_program()
-        else:
-            invalid_option_message()
+
+        invalid_option_message()
 
 
 def login():
+    """
+    Login user on the system.
+    Check if username exists.
+    Check if password is the same as registered.
+    """
     clear()
     print("\n" + Fore.CYAN + "L O G I N\n".center(80))
     while True:
         username = input("Username: ")
-        try:
-            worksheet = SHEET.worksheet(username)
-        except gspread.exceptions.WorksheetNotFound as e:
-            print("Username not found. Please try again.\n")
-        else:
-            registered_password = worksheet.acell('B2').value
-            while True:
-                password = getpass("Password: ")
-                # bytes1 = password.encode('utf-8')
-                result = bcrypt.checkpw(password.encode('utf-8'), registered_password.encode('utf-8'))
-                
-                print(result)
-                if result:
-                    return worksheet
-                else:
-                    print("Wrong Password. Please try again.\n")
-            break
-    return None
+        if validate_username(username):
+            try:
+                worksheet = SHEET.worksheet(username)
+            except gspread.exceptions.WorksheetNotFound:
+                print("Username not found. Please try again.\n")
+            else:
+                registered_password = worksheet.acell('B2').value
+                while True:
+                    password = getpass("Password: ")
+                    if validate_password(password):
+                        is_password = bcrypt.checkpw(
+                            password.encode('utf-8'),
+                            registered_password.encode('utf-8')
+                            )
+                        if is_password:
+                            return worksheet
 
-def guide():
+                        print("\n" + Fore.RED + "Wrong Password. Please, try again!\n".center(80))
+
+
+def print_guide():
+    """
+    Print the guide on how to use the system.
+    """
     clear()
     print("\n" + Fore.CYAN + "G U I D E\n".center(80))
     guide = "About Us\n"
