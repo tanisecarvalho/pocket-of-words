@@ -89,7 +89,7 @@ def exit_program():
     Exit system.
     """
     print_logo()
-    print("Sad to see you going. Please, come back soon.\n".center(80))
+    print("Sad to see you go. Please, come back soon.\n".center(80))
     print("To start again click on the 'RUN PROGRAM' button bellow.".center(80))
     sys.exit(0)
 
