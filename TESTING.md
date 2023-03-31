@@ -175,7 +175,7 @@ Display invalid option message
 
 ### Known Bugs
 
-* The List of Words does not centralise.
+* No known bugs have been found.
 
 ---
 
